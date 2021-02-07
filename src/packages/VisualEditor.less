@@ -1,0 +1,125 @@
+@menuSize: 275px;
+@headSize: 60px;
+@operatorSize: 275px;
+
+@ibc: #dadfe6;
+@ibl: #ebeef5;
+@itc: #313659;
+@icc: rgba(0,0,0,0.45);
+@boxShadowColor: #f0f1f2;
+
+@primary: #409EFF;
+
+.visual-editor {
+  position: fixed;
+  top: 20px;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background-color:white;
+
+  &:before {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    content: " ";
+  }
+
+  & > .visual-editor-menu {
+    position: absolute;
+    width: @menuSize;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 9;
+    .visual-editor-menu-item{
+      position: relative;
+      width: calc(100% - 20px);
+      margin-left: 10px;
+      border: solid 1px @ibl;
+      margin-top: 80px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+
+      &:after{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        content: ' ';
+      }
+      &:hover{
+        border-color: @primary;
+        cursor: move;
+      }
+      .visual-editor-menu-item-label{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: @primary;
+        color: white;
+        padding: 4px 8px;
+        font-size: 12px;
+        z-index: 1;
+      }
+      .visual-editor-menu-item-content{
+        text-align: center;
+
+      }
+    }
+  }
+
+  & > .visual-editor-head {
+    position: absolute;
+    top: 0;
+    left: @menuSize;
+    right: @operatorSize;
+    height: @headSize;
+  }
+
+  & > .visual-editor-operator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: @operatorSize;
+    background-color:white;
+    z-index: 9;
+  }
+
+  & > .visual-editor-body {
+    padding-top: @headSize;
+    padding-left: @menuSize;
+    padding-right: @operatorSize;
+    box-sizing: border-box;
+    height: 100%;
+    position: relative;
+    background-color: rgba(white,0.5);
+    z-index: 1;
+
+    & > .visual-editor-content {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      & > .visual-editor-container {
+        background-color:white;
+        flex-shrink: 0;
+        flex-grow: 0;
+        position: relative;
+        & > .visual-editor-block {
+          position: absolute;
+        }
+      }
+    }
+  }
+}
