@@ -73,7 +73,6 @@
       }
       .visual-editor-menu-item-content{
         text-align: center;
-
       }
     }
   }
@@ -112,12 +111,41 @@
       display: flex;
       justify-content: center;
       & > .visual-editor-container {
+        user-select: none;
         background-color:white;
         flex-shrink: 0;
         flex-grow: 0;
         position: relative;
+        display: inline-block;
+        &:before {
+          @space: 2px;
+          position: absolute;
+          top: -@space;
+          left: -@space;
+          right: -@space;
+          bottom: -@space;
+          border: dashed 1px @primary;
+          content: '';
+        }
         & > .visual-editor-block {
           position: absolute;
+          display: inline-block;
+          cursor: move;
+          & * {
+            pointer-events: none;
+          }
+          &.visual-editor-block-focus {
+            &:before {
+              position: absolute;
+              @space: 3px;
+              top: -@space;
+              left: -@space;
+              right: -@space;
+              bottom: -@space;
+              content: ' ';
+              border: dashed 1px @primary;
+            }
+          }
         }
       }
     }

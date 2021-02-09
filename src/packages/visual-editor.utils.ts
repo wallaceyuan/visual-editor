@@ -1,6 +1,9 @@
 export interface VisualEditorBlockData {
+  componentKey: string;
   top: number;
   left: number;
+  adjustPostion: boolean;
+  focus: boolean;
 }
 
 export interface VisualEditorModelValue {
@@ -19,8 +22,26 @@ export interface VisualEditorComponent {
   render: () => JSX.Element | string;
 }
 
+export function createNewBlock({
+  component,
+  top,
+  left,
+}:{
+  component: VisualEditorComponent | null ,
+  top: number;
+  left: number;
+}) {
+  return {
+    top,
+    left,
+    componentKey: component?.key || '',
+    adjustPostion: true,
+    focus: false
+  }
+}
+
 export function createEditorConfig() {
-  const componentList: Omit<VisualEditorComponent, 'key'>[] = [];
+  const componentList: VisualEditorComponent[] = [];
   const componentMap: Record<string, VisualEditorComponent> = {};
 
   return {

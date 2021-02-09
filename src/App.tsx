@@ -31,7 +31,6 @@ visualConfig.registry('input', {
 })
 
 
-
 function App() {
 
   const [ jsonData, setData ] = useState({
@@ -41,12 +40,18 @@ function App() {
     },
     blocks: [
       {
+        componentKey: 'input',
         top: 100,
-        left: 100
+        left: 100,
+        adjustPostion: false,
+        focus: false
       },
       {
+        componentKey: 'button',
         top: 200,
-        left: 200
+        left: 200,
+        adjustPostion: false,
+        focus: true
       }
     ]
   });
