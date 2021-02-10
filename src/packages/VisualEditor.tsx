@@ -1,10 +1,12 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Tooltip } from 'antd';
 
 import './VisualEditor.less'
 import { VisualEditorModelValue, VisualEditorConfig, VisualEditorComponent, createNewBlock, VisualEditorBlockData } from './visual-editor.utils';
 import VisualEditorBlock from './visual-editor.blocks';
 
 import { useModel } from './utils/useModel';
+import { useVisualCommand } from './utils/visual.command';
 
 interface IVisualEditor{
   jsonData: VisualEditorModelValue;
@@ -76,7 +78,6 @@ const VisualEditor: FC<IVisualEditor> = ({ jsonData, config }) => {
         } )
         return find;
       });
-      console.log('index',index, oldBlock, blocks)
       blocks.splice(index, 1, newBlock)
       methods.updateBlocks(blocks)
     },
@@ -90,8 +91,6 @@ const VisualEditor: FC<IVisualEditor> = ({ jsonData, config }) => {
       methods.updateBlocks(dataModel.value.blocks)
     }
   })
-
-  console.log('dataModel', dataModel.value.blocks);
 
   const useFocus = () => {
     const getter = useCallback(() => {
@@ -187,6 +186,46 @@ const VisualEditor: FC<IVisualEditor> = ({ jsonData, config }) => {
     }
   })
 
+  const commander =  useVisualCommand();
+
+  const buttons = useRef([
+      {label: '撤销', icon: 'icon-back', handler: commander.undo, tip: 'ctrl+z'},
+      {label: '重做', icon: 'icon-forward', handler: commander.redo, tip: 'ctrl+y, ctrl+shift+z'},
+      // {
+      //     label: () => previewModel.value ? '编辑' : '预览',
+      //     icon: () => previewModel.value ? 'icon-edit' : 'icon-browse',
+      //     handler: () => {
+      //         if (!previewModel.value) {methods.clearFocus()}
+      //         previewModel.value = !previewModel.value
+      //     },
+      // },
+      // {
+      //     label: '导入', icon: 'icon-import', handler: async () => {
+      //         const text = await $dialog.textarea('', {title: '请输入导入的JSON数据'})
+      //         if (!text) {return}
+      //         try {
+      //             const data = JSON.parse(text)
+      //             commander.updateModelValue(data)
+      //         } catch (e) {
+      //             ElNotification({
+      //                 title: '导入失败！',
+      //                 message: '导入的数据格式不正常，请检查！'
+      //             })
+      //         }
+      //     }
+      // },
+      // {label: '导出', icon: 'icon-export', handler: () => $dialog.textarea(JSON.stringify(dataModel.value), {title: '导出的JSON数据', editReadonly: true})},
+      // {label: '置顶', icon: 'icon-place-top', handler: () => commander.placeTop(), tip: 'ctrl+up'},
+      // {label: '置底', icon: 'icon-place-bottom', handler: () => commander.placeBottom(), tip: 'ctrl+down'},
+      {label: '删除', icon: 'icon-delete', handler: () => commander.delete(), tip: 'ctrl+d, backspace, delete'},
+      // {label: '清空', icon: 'icon-reset', handler: () => commander.clear()},
+      // {
+      //     label: '关闭', icon: 'icon-close', handler: () => {
+      //         methods.clearFocus()
+      //         setEditFlag(false)
+      //     },
+      // },
+  ])
   return(
     <div className='visual-editor'>
       <div className='visual-editor-menu'>
@@ -206,7 +245,20 @@ const VisualEditor: FC<IVisualEditor> = ({ jsonData, config }) => {
           </div>
         )) }
       </div>
-      <div className='visual-editor-head'>visual-editor-head</div>
+      <div className='visual-editor-head'>
+        <ul>
+            {buttons.current.map((btn, index) => {
+                let {icon, label, tip} = btn
+                // if (typeof label === "function") {label = label()}
+                // if (typeof icon === "function") {icon = icon()}
+                const Content = (<li key={index} onClick={() => !!btn.handler && btn.handler()}>
+                    <i className={`iconfont ${icon}`}/>
+                    <span>{label}</span>
+                </li>)
+                return !!tip ? <Tooltip title={tip} key={index} placement="bottom">{Content}</Tooltip> : Content
+            })}
+        </ul>
+      </div>
       <div className='visual-editor-operator'>visual-editor-operator</div>
       <div className='visual-editor-body'>
         <div className='visual-editor-content'>
