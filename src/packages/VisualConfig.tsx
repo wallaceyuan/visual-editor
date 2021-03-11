@@ -1,4 +1,3 @@
-import React from 'react';
 import { createEditorConfig } from './visual-editor.utils';
 import { Button, Input } from 'antd';
 

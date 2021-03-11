@@ -11,12 +11,6 @@ export interface Command{
   followQueue?: boolean;
 }
 
-// export interface CommandManager {
-//   queue: CommandExecute[];
-//   current: number;
-
-// }
-
 export function useCommand() {
 
   const [ state ] = useState({

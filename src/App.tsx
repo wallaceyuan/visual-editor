@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Input } from 'antd';
 
 // import logo from './logo.svg';
@@ -33,10 +33,10 @@ visualConfig.registry('input', {
 
 function App() {
 
-  const [ jsonData, setData ] = useState({
+  const [ data, setData ] = useState({
     container: {
-      height: 800,
-      width: 500
+      height: 700,
+      width: 1000
     },
     blocks: [
       {
@@ -54,7 +54,7 @@ function App() {
         focus: true
       }
     ]
-  });
+  } as any);
 
   const [ config, setConfig ] = useState<VisualEditorConfig>(visualConfig);
 
@@ -62,7 +62,11 @@ function App() {
   return (
     <div className="App">
       这是组件
-      <VisualEditor jsonData={jsonData} config={config} />
+      <VisualEditor
+        value={data}
+        config={config}
+        onChange={setData}
+      />
     </div>
   );
 }

@@ -1,6 +1,4 @@
-import React from "react";
 import {useCallback, useEffect, useRef, useState} from "react";
-
 
 export function useModel<T>(propsValue: T, propsEmitter?: (val: T) => void, config?: { autoWatch?: boolean | undefined, autoEmit?: boolean | undefined }) {
 

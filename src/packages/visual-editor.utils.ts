@@ -1,4 +1,4 @@
-export interface VisualEditorBlockData {
+export interface VisualEditorBlock {
   componentKey: string;
   top: number;
   left: number;
@@ -11,7 +11,7 @@ export interface VisualEditorModelValue {
     width: number;
     height: number;
   }
-  blocks: VisualEditorBlockData[];
+  blocks: VisualEditorBlock[];
 }
 
 
@@ -48,9 +48,13 @@ export function createEditorConfig() {
     componentList,
     componentMap,
     registry: (key: string, component: Omit<VisualEditorComponent, 'key'>) => {
-      const comp = { ...component, key }
-      componentList.push(comp);
-      componentMap[key] = comp;
+      if(componentMap[key]){
+        const index = componentList.indexOf(componentMap[key])
+        componentList.splice(index, 1)
+      }
+      const newComponent = { ...component, key }
+      componentList.push(newComponent);
+      componentMap[key] = newComponent;
     }
   }
 }

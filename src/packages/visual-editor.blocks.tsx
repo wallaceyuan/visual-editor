@@ -1,25 +1,33 @@
-import React, { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 import deepcopy from  'deepcopy';
 import classnames from  'classnames';
-import { VisualEditorBlockData, VisualEditorConfig } from './visual-editor.utils';
+import { VisualEditorBlock, VisualEditorConfig } from './visual-editor.utils';
+import { useUpdate } from './hook/useUpdate';
 
-const VisualEditorBlock: FC<{
-  block: VisualEditorBlockData;
+const ReactVisualEditorBlock: FC<{
+  block: VisualEditorBlock;
   config: VisualEditorConfig;
-  onMousedownBlock: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, block: VisualEditorBlockData) => void;
-  onAdjustBlock: (newBlock: VisualEditorBlockData, oldBlock: VisualEditorBlockData) => void;
+  //onMousedownBlock: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, block: VisualEditorBlockData) => void;
 }> = ({
   block,
   config,
-  onMousedownBlock,
-  onAdjustBlock
+  //onMousedownBlock,
 }) => {
 
-  const el = useRef<HTMLDivElement>(null);
+  const elRef = useRef<HTMLDivElement>(null);
 
   const component = config.componentMap[block.componentKey];
 
   const Render = component.render();
+
+  const styles = useMemo(() => {
+    return {
+      top: block.top,
+      left: block.left,
+      zIndex: 100,
+      opacity: block.adjustPostion ? '0' : ''
+    }
+  }, [ block.adjustPostion ])
 
   const classname = classnames(
     'visual-editor-block',
@@ -28,30 +36,34 @@ const VisualEditorBlock: FC<{
     }
   )
 
+  const update = useUpdate()
+
+
   useEffect(() => {
     const data = deepcopy(block);
-    if(el.current && block.adjustPostion === true){
-      data.top = data.top - el.current?.offsetHeight / 2;
-      data.left = data.left - el.current?.offsetWidth / 2;
-      data.adjustPostion = false
-      block = {...data};
-      onAdjustBlock(data, block)
+    if(elRef.current && block.adjustPostion === true){
+      const { top, left } = block;
+      const { height, width } = elRef.current?.getBoundingClientRect();
+      block.adjustPostion = false;
+      block.left = left - width / 2
+      block.top = top - height / 2
+      update();
     }
   },[])
 
   return(
     <div
-      ref={el}
+      ref={elRef}
       className={classname}
-      style={{ top: block.top, left: block.left, zIndex: 100 }}
-      onMouseDown={(e) => onMousedownBlock(e, block)}
+      style={styles}
+      // onMouseDown={(e) => onMousedownBlock(e, block)}
     >
       { Render }
     </div>
   );
 }
 
-export default VisualEditorBlock;
+export default ReactVisualEditorBlock;
 
 
 
